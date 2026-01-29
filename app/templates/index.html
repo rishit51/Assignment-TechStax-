@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GitHub Activity</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fafafa;
+      padding: 40px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .event {
+      background: white;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+
+<body>
+<h2>Latest Repository Activity</h2>
+
+<div id="events"></div>
+
+<script>
+async function loadEvents() {
+  const res = await fetch("/webhook/events");
+  const data = await res.json();
+
+  const container = document.getElementById("events");
+  container.innerHTML = "";
+
+  data.forEach(e => {
+    let text = "";
+    const time = new Date(e.timestamp.$date).toUTCString();
+
+    if (e.action === "PUSH") {
+      text = `${e.author} pushed to ${e.to_branch} on ${time}`;
+    }
+
+    if (e.action === "PULL_REQUEST") {
+      text = `${e.author} submitted a pull request from ${e.from_branch} to ${e.to_branch} on ${time}`;
+    }
+
+    if (e.action === "MERGE") {
+      text = `${e.author} merged branch ${e.from_branch} to ${e.to_branch} on ${time}`;
+    }
+
+    const div = document.createElement("div");
+    div.className = "event";
+    div.innerText = text;
+    container.appendChild(div);
+  });
+}
+
+loadEvents();
+setInterval(loadEvents, 15000);
+</script>
+
+</body>
+</html>
