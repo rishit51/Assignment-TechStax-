@@ -1,6 +1,19 @@
 # Dev Assessment - Webhook Receiver
+## Notes:
+1.The UI is populated via backend APIs rather than directly querying MongoDB from the frontend.
 
-Please use this repository for constructing the Flask webhook receiver.
+2. The UI can be accessed at: /webhooks/ui
+
+3. For demo purposes, I have not implemented deduplication to ensure that events appear only once in the feed.
+
+As a proposed solution, this can be handled by filtering events with timestamp > (current_time - 15 seconds) or by enforcing idempotency at the database level.
+
+4. Please configure the MongoDB connection URL in app/sample.ini as specified below before running the application.
+
+```
+[TEST]
+DB_URI = mongodb+srv://<db_user>:<password>@cluster0.quxaezo.mongodb.net/github?appName=Cluster0
+```
 
 *******************
 
